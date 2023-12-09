@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .box1 {
+            width: 100px;
+            height: 100px;
+            background: red;
+            position: absolute;
+            border: 1px solid red;
+            border-radius: 50%;
+            left: 50px;
+            top: 450px;
+        }
+        
+        .box2 {
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            border: 1px dashed red;
+            border-radius: 50%;
+            left: 900px;
+            top: 200px;
+            line-height: 100px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box1"></div>
+    <div class="box2">数量：<span>0</span></div>
+    <script>
+        //定点抛物线方程。
+        //抛物线运动：y=ax^2+bx+c   a:曲率   
+        //起始位置当中原点：c=0;    y=ax^2+bx   
+        //约定曲率：0.002-0.009
+
+        //1.求b
+        var oBox1 = document.querySelector('.box1');
+        var oBox2 = document.querySelector('.box2');
+        var oSpan = document.querySelector('span');
+        var num = 0;
+        oBox1.onclick = function() {
+            //运动盒子的当前位置。
+            var clonebox = oBox1.cloneNode(true);
+            clonebox.style.cssText = `width:50px;height:50px;background:rgba(255,0,0,0.3);position:absolute;left:75px;top:475px`;
+            document.body.appendChild(clonebox);
+            var currentbox = {
+                x: clonebox.offsetLeft,
+                y: clonebox.offsetTop
+            };
+
+            //盒子间的距离。利用此距离求b
+            var distance = {
+                x: oBox2.offsetLeft - currentbox.x,
+                y: oBox2.offsetTop - currentbox.y
+            }
+
+            var a = 0.0016;
+
+            var b = (distance.y - a * distance.x * distance.x) / distance.x;
+
+            var x = 0;
+            var timer = setInterval(function() {
+                x += 4;
+                clonebox.style.left = currentbox.x + x + 'px';
+                clonebox.style.top = currentbox.y + a * x * x + b * x + 'px';
+                if (clonebox.offsetLeft >= oBox2.offsetLeft) {
+                    clearInterval(timer);
+                    document.body.removeChild(clonebox);
+                    oSpan.innerHTML = ++num;
+                }
+            }, 5);
+        }
+    </script>
+</body>
+
+</html>
